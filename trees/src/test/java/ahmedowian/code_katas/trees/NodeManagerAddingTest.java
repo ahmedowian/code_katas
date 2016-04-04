@@ -6,20 +6,17 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map.Entry;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-public class NodeManagerAddingTest
+public class NodeManagerAddingTest extends NodeManagerTestBase
 {
-    NodeManager mgr;
-    TreeNode nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG, nodeH, nodeI, nodeJ, nodeK, nodeL, nodeC2, nodeM;
-    final int NODE_C2_ORIGINAL_VALUE = 22;
-    HashMap<TreeNode, Integer> nodeMap;
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     
-
     /**
      * Sets up the tree to look like this:
      *          A
@@ -36,48 +33,24 @@ public class NodeManagerAddingTest
     @Before
     public void setUp()
     {
-        nodeA = new TreeNode("A", 8);
-        mgr = new NodeManager(nodeA);
-        
-        nodeB = new TreeNode("B", 4);
-        nodeI = new TreeNode("I", 34);
-        nodeL = new TreeNode("L", 45);
+        super.setUp();
         nodeA.addChildren(nodeB, nodeI, nodeL);
-        
-        nodeC = new TreeNode("C", 2);
-        nodeD = new TreeNode("D", 0);
         nodeB.addChildren(nodeC, nodeD);
-        
-        nodeE = new TreeNode("E", 5);
-        nodeF = new TreeNode("F", 9);
-        nodeG = new TreeNode("G", 7);
-        nodeH = new TreeNode("H", 6);
         nodeD.addChildren(nodeE, nodeF, nodeG, nodeH);
-        
-        nodeJ = new TreeNode("J", 20);
         nodeI.addChildren(nodeJ);
-
-        nodeK = new TreeNode("K", 47);
         nodeJ.addChildren(nodeK);
-        
-        nodeC2 = new TreeNode("C", NODE_C2_ORIGINAL_VALUE);
         nodeL.addChildren(nodeC2);
-        
-        nodeM = new TreeNode("M", 42);
         nodeC2.addChildren(nodeM);
-        
-        // Don't bother putting C2, because it will overwrite C in the nodeMap
-        TreeNode[] nodeArray = {nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG, nodeH, nodeI, nodeJ, nodeK, nodeL, nodeM};
-        rememberValues(nodeArray);
     }
     
-    private void rememberValues(TreeNode[] nodeArray)
+    @Test
+    public void addA_AtNegativeNumberThrowsException()
     {
-        nodeMap = new HashMap<>();
-        for (TreeNode node : nodeArray)
-        {
-            nodeMap.put(node, node.getValue());
-        }
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("non-negative");
+        
+        TreeNode node = new TreeNode("A", 10);
+        mgr.add(node, -1);
     }
     
     @Test
@@ -165,39 +138,6 @@ public class NodeManagerAddingTest
         TreeNode node = new TreeNode("X", 10);
         mgr.add(node, 3);
         assertNothingElseChanged();
-    }
-    
-    private void assertNothingElseChanged(TreeNode... exceptNodes)
-    {
-        boolean c2Changed = false;
-        assertNothingElseChanged(c2Changed, exceptNodes);
-    }
-    
-    private void assertNothingElseChanged(boolean c2Changed, TreeNode... exceptNodes)
-    {
-        if (!c2Changed)
-        {
-            assertEquals(NODE_C2_ORIGINAL_VALUE, nodeC2.getValue());
-        }
-        
-        for (Entry<TreeNode, Integer> entry : nodeMap.entrySet())
-        {
-            TreeNode node = entry.getKey();
-            boolean checkThisNode = true;
-            for (TreeNode exceptNode : exceptNodes)
-            {
-                if (node.equals(exceptNode))
-                {
-                    checkThisNode = false;
-                    break;
-                }
-            }
-            
-            if (checkThisNode)
-            {
-                assertEquals(entry.getValue().intValue(), node.getValue());
-            }
-        }
     }
     
     @Test
