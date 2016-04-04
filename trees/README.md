@@ -1,4 +1,4 @@
-# code_katas
+# code_katas - Trees
 
 
 You are being asked to implement a class which is used to manage a tree of "TreeNodes".
@@ -11,6 +11,6 @@ add(TreeNode node, int treeLevelToModify) – this method will update all nodes 
 
 remove(TreeNode node, int treeLevelToModify) – this method will remove all nodes in the tree at the specified level whose value equals the value of node.
 
-Questions: What about its children?
+Questions: What about its children? They must become the children of the parent.
 
 Note that a given NodeManager might be utilized by multiple threads.

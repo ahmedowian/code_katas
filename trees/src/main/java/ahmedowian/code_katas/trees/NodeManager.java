@@ -1,7 +1,8 @@
 package ahmedowian.code_katas.trees;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 public class NodeManager
 {
@@ -26,7 +27,7 @@ public class NodeManager
             throw new IllegalArgumentException("treeLevelToModify [" + treeLevelToModify + "] must be non-negative.");
         }
     
-        Set<TreeNode> nodes = getNodesAtLevelToModify(treeLevelToModify, 0, root);
+        Collection<TreeNode> nodes = getNodesAtTreeLevel(treeLevelToModify);
         for (TreeNode tempNode : nodes)
         {
             if (tempNode.equals(node))
@@ -36,21 +37,33 @@ public class NodeManager
         }
     }
     
-    protected Set<TreeNode> getNodesAtLevelToModify(int treeLevelToModify, int level, TreeNode node)
+    protected Collection<TreeNode> getNodesAtTreeLevel(int treeLevel)
     {
-        final int NEXT_LEVEL = level + 1;
+        return getNodesAtTreeLevel(treeLevel, 0, root);
+    }
+    
+    /**
+     * Traverses the tree depth-first to get the nodes at the tree level specified
+     * @param treeLevel the level of the tree to get the nodes
+     * @param nodeLevel the current node level
+     * @param node the current node
+     * @return a collection of the nodes at the given tree level
+     */
+    protected Collection<TreeNode> getNodesAtTreeLevel(int treeLevel, int nodeLevel, TreeNode node)
+    {
+        final int NEXT_LEVEL = nodeLevel + 1;
         
-        if (treeLevelToModify > NEXT_LEVEL)
+        if (treeLevel > NEXT_LEVEL)
         {
             // Traverse the children to get the nodes to modify
-            Set<TreeNode> nodesToModify = new HashSet<>();
+            Collection<TreeNode> nodesAtTreeLevel = new ArrayList<>();
             for (TreeNode child : node.getChildren())
             {
-                nodesToModify.addAll(getNodesAtLevelToModify(treeLevelToModify, NEXT_LEVEL, child));
+                nodesAtTreeLevel.addAll(getNodesAtTreeLevel(treeLevel, NEXT_LEVEL, child));
             }
-            return nodesToModify;
+            return nodesAtTreeLevel;
         }
-        else if (treeLevelToModify == NEXT_LEVEL)
+        else if (treeLevel == NEXT_LEVEL)
         {
             // Just return the children, since they are at the next level
             return node.getChildren();
@@ -62,7 +75,6 @@ public class NodeManager
             set.add(node);
             return set;
         }
-        
     }
     
     /**

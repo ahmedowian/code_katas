@@ -57,9 +57,14 @@ public class TreeNode
      * @param that
      * @return true if the keys are equal
      */
-    public boolean equals(TreeNode that)
+    @Override
+    public boolean equals(Object that)
     {
-        return this.key == that.key;
+        if (that instanceof TreeNode)
+        {
+            return this.key == ((TreeNode) that).key;
+        }
+        return false;
     }
     
     /**
