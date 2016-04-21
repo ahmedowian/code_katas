@@ -58,6 +58,8 @@ public class NaturalNumberGeneratorTest
     @Test
     public void test1000()
     {
-        assertEquals(233168, NaturalNumberGenerator.getSumOfMultiplesOf3Or5(1000));
+        long sum = NaturalNumberGenerator.getSumOfMultiplesOf3Or5(1000);
+        System.out.println("Sum is " + sum);
+        assertEquals(233168, sum);
     }
 }
