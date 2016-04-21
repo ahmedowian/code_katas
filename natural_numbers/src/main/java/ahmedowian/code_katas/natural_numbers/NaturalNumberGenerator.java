@@ -9,10 +9,10 @@ package ahmedowian.code_katas.natural_numbers;
  */
 public class NaturalNumberGenerator
 {
-    public static void main(String[] args) 
+    public static long getSumOfMultiplesOf3Or5(int max) 
     {
         long sum = 0;
-        for (int i = 3; i < 1000; i++)
+        for (int i = 3; i < max; i++)
         {
             if (i % 3 == 0 || i % 5 == 0)
             {
@@ -20,6 +20,6 @@ public class NaturalNumberGenerator
             }
         }
         
-        System.out.println("Sum: " + sum);
+        return sum;
     }
 }
